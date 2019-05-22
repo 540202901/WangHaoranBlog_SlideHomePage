@@ -1,0 +1,9 @@
+node_modules
+.idea
+.vscode
+.git
+
+//.idea 是webstorm的配置文件
+//.vscode   是vs的配置文件
+//.git 是git 的配置文件
+
