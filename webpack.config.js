@@ -25,6 +25,8 @@ module.exports = {
       //解析高级ES6语法的第三方模块，需要exclude剔除掉nodemodes，否则很卡
       { test:/\.js$/,use:'babel-loader',exclude:/node_modules/ },
       { test:/\.vue$/,use:'vue-loader' },//处理 .vue 文件的loader
+      { test: /\.scss$/,use:['style-loader','css-loader','sass-loader']},//scss
+      { test:/\.(jpg|png|gif|bmp|jpeg|svg)$/,use:'url-loader?limit=1000&name=[hash:8]-[name].[ext]' },///\.(jpg|png|gif|bmp|jpeg)$/ 匹配多种扩展名
 
     ],
   },
@@ -37,4 +39,8 @@ module.exports = {
   //============缩小项目大小部分
   mode:'development',//开发模式
   // mode:'production',//生产模式
+  externals:{
+    "vue":"Vue",
+    "vuex":"Vuex",
+  },
 }
