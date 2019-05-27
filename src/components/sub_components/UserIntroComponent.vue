@@ -14,35 +14,68 @@
         <hexagonBox
             :hexagonCenter="sectionData.hexagonCenter"
             :hexagonList="sectionData.hexagonList"
-            :hexagonSize="hexagonSize"
-            :sizeChangeObj="sizeChangeObj"
+            :showHexagonInit="showHexagonInit"
         ></hexagonBox>
       </div>
     </div>
 
+    <!--博客文章链接-->
+    <transition>
+      <blogArticleContainer
+          v-if="showBlogArticleFlag"
+          :articleTitle="sectionData.articleTitle"
+          :articleList="sectionData.articleList"
+          :articleTitleHref="sectionData.articleTitleHref"
+      ></blogArticleContainer>
+    </transition>
 
   </div>
 </template>
 
 <script>
   import hexagonBox from '../default_components/HexagonBoxComponent.vue'
+  import blogArticleContainer from './BlogArticalesComponent.vue'
 
   export default {
     name: "UserIntroComponent",
     data:function () {
       return {
-        hexagonSize:200,//中间盒子大小，小盒子会跟着大盒子走
-        sizeChangeObj:{big:.8,medium:.7,small:.6 },//屏幕宽度缩小后，六边形显示的比例
+        //博客文章渲染
+        showBlogArticleFlag:false,//是否显示博客文章列表
+        showBlogArticleTime:2500,//显示博客文章延迟的时间
+        //六边形盒子组渲染
+        showHexagonInit:{
+          hexagonSize:200,//中间盒子大小，小盒子会跟着大盒子走
+          sizeChangeObj:{big:.8,medium:.7,small:.6 },//屏幕宽度缩小后，六边形显示的比例
+
+          hexagonOpacity:.55,//六边形显示出来的百分比
+          hexagonShowTime:2000,//显示中间六边形的时间
+          MHSTime:500,//显示中等六边形的时间
+          MHSIntervalTime:200,//显示中等六边形间隔
+          initFlag : false,//是否初始化完毕 完毕就修改一下过渡动画时间样式
+          initTime:this.hexagonShowTime,//初始化所需时间
+        },//六边形组合显示配置
+
       }
     },
-    mounted(){
 
-    },
     computed:{
+      loadingOver(){ return this.$store.state.loadingOver },//是否显示导航栏
     },
     props:['sectionData'],
+
+    watch:{
+      'loadingOver':function (newVal) {
+        if (newVal) {
+          setTimeout(()=>{
+            this.showBlogArticleFlag = true//若干秒后显示文章列表
+          },this.showBlogArticleTime)
+        }
+      },//如果页面加载完成，那么开始显示文章列表
+    },
+
     components:{
-      hexagonBox,
+      hexagonBox,blogArticleContainer,
     },
 
 
@@ -51,6 +84,17 @@
 </script>
 
 <style lang="scss" scoped>
+  .v-enter,.v-leave-to{
+    opacity:0;
+    transform:translateY(150px);
+  }
+  .v-enter-active,
+  .v-leave-active{
+    transition:all 1s ease;
+  }
+
+
+
   .user-intro-container{
     width: 100%;
     height: 100%;
@@ -65,7 +109,7 @@
       position: absolute;
       .bg-top{
         width: 100%;
-        height: 85%;
+        height: 100%;
         background-image: url("../../images/top-3200.svg") ;
         background-size:200% ;
         background-repeat: no-repeat;
@@ -73,24 +117,24 @@
       }
       .bg-bottom{
         width: 100%;
-        height: 16%;
+        /*height: 21%;*/
         transform:translateY(-1%);
         background-color: #fff;
       }
-      @media screen  and (min-width:480px)  and (max-width:767px){
+      @media screen  and (min-width:480px)  and (max-width:999px){
         .bg-top{
-          height: 80%;
           background-size:300% ;
+          height: 70%;
         }
         .bg-bottom{
-          height: 21%;
+          height: 31%;
         }
       }
 
       @media screen  and (max-width:479px)  {
         .bg-top{
-          height: 70%;
           background-size:400% ;
+          height: 70%;
         }
         .bg-bottom{
           height: 31%;
@@ -98,6 +142,7 @@
       }
     }
 
+    /*蜂巢导航栏*/
     .combNav{
       width: 100%;
       height: 100%;
@@ -122,12 +167,6 @@
 
 
     }
-
-
-
-
-
-
 
 
 

@@ -6,8 +6,8 @@
     <div class="boxF">
       <div class="boxS">
         <div class="boxT" >
-          <div class="overlay" @click="goPage(msg.href)">
-          </div>
+          <a class="overlay" :href="msg.href" target="__blank"  @click="goPageMusic" >
+          </a>
           <div class="content-box" :style="`background:#fff;`" >
             <div class="content-box-bg-img"></div>
             <div class="content-box-container"
@@ -40,29 +40,28 @@
     data:function(){
       return {
         playFlag:false,//鼠标放上音效
-
+        playMusicTime:1000,//鼠标放上音乐间隔
+        goPageMusicTime:1500,//点击进入页面音乐间隔
+        goPageMusicFlag:false,
       }
     },
     props:["size","msg"],
-    computed:{
-      goPageFlag(){ return this.$store.state.goPageFlag },
-    },
 
     mounted(){
       let box = this.$refs.hexagonBox
 
       box.onmouseover = ()=>{
         this.playFlag = true
-        setTimeout(()=>{this.playFlag=false},1000)//1秒内只执行一次
+        setTimeout(()=>{this.playFlag=false},this.playMusicTime)//1秒内只执行一次
       }//鼠标放上播放音乐
 
     },
     methods:{
-      goPage(href){
-        this.$store.commit('setGoPageFlag',true)  //设置为播放音乐
-        setTimeout(()=>{this.$store.commit('setGoPageFlag',false)},2500)//5秒后才能再次播放
-
-        window.open(href);
+      goPageMusic(){
+        this. goPageMusicFlag = true //设置为播放音乐
+        setTimeout(()=>{
+          this. goPageMusicFlag = false
+        },this.goPageMusicTime)//5秒后才能再次播放
       },
     },
     watch:{
@@ -71,17 +70,17 @@
           var myAuto = this.$refs.musicBox;
           // console.log(myAuto)
           myAuto.currentTime = 0//设置播放进度为0
-          myAuto.play();//播放
-          setTimeout(()=>{myAuto.pause()},1000)//多少秒后停止播放
+            myAuto.play();//播放
+          setTimeout(()=>{myAuto.pause()},this.playMusicTime)//多少秒后停止播放
         }
       },
-      'goPageFlag':function(newVal){
+      'goPageMusicFlag':function(newVal){
         if(newVal===true){
           var myAuto = document.getElementById('goPageMusic')
           // console.log(myAuto)
           myAuto.currentTime = 0//设置播放进度为0
           myAuto.play();//播放
-          setTimeout(()=>{myAuto.pause()},2000)//多少秒后停止播放
+          setTimeout(()=>{myAuto.pause()},this.goPageMusicTime)//多少秒后停止播放
 
 
         }
@@ -148,7 +147,7 @@
           top: 0;
           width: 100%;
           height: 100%;
-          background:url('http://img.wanghaoranblog.com/blog/Home_FullPage/img/%E5%85%AD%E8%BE%B9%E5%BD%A2%E5%8C%85%E8%BE%B9-3.png')
+          background:url('http://img.wanghaoranblog.com/blog/Home_FullPage/img/%E5%85%AD%E8%BE%B9%E5%BD%A2%E5%8C%85%E8%BE%B9-4.png')
           no-repeat center center;
           background-size:100% 100% ;
           z-index:100;
@@ -161,7 +160,7 @@
           height: 100%;
           background-repeat:no-repeat;
           background-position:center center;
-          background-size:85% 85% ;
+          background-size:90% 90% ;
           z-index:10;
 
 

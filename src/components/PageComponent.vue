@@ -1,31 +1,52 @@
 <template>
   <div class="page-container" :style="`background-color:${section.bgc};`">
+    <!--背景之iframe背景-->
     <IframeBGComponent
         class="z100"
         v-if="section.bgType === 'iframeBG' "
         :src="section.bgSrc"
     ></IframeBGComponent>
-
+    <!--背景之图片背景-->
     <div class="bg-img z100"
          v-if="section.bgType === 'img' "
          :style="`background:url('${section.bgSrc}') bottom center; `"
     ></div>
 
 
-    <!--内容页面-->
-    <div class="page-main">
+
+
+
+    <!--页面中的内容-->
+    <div class="page-main" >
+      <!--如果是首页,那么就渲染首页组件-->
       <userIntroComponent :sectionData="section.subCmtData" v-if="section.subCmtType === 'home' "></userIntroComponent>
+      <!--如果是页脚,那么就渲染页脚组件-->
+      <footerPageComponent :sectionData="section.subCmtData" v-if="section.subCmtType === 'footer' "></footerPageComponent>
+
+
+      <!--外接页面iframe-->
+      <IframeBGComponent
+          v-if="section.bgType === 'iframe' "
+          :src="section.bgSrc"
+      ></IframeBGComponent>
     </div>
+
+
+
+
 
 
   </div>
 </template>
 
 <script>
+  //每个页面的组件
   import IframeBGComponent from './background_components/IframeBGComponent.vue'
 
-  //角色信息展示页组件
+  //首页组件
   import userIntroComponent from './sub_components/UserIntroComponent.vue'
+  //页脚组件
+  import footerPageComponent from './sub_components/FooterPageComponent.vue'
 
 
   export default {
@@ -38,8 +59,9 @@
     },
     props:['section','subComponent'],
     components:{
-      IframeBGComponent,
-      userIntroComponent,//传入的子组件
+      IframeBGComponent,//背景图组件
+      userIntroComponent,//首页组件
+      footerPageComponent,//页脚组件
     },
   }
 </script>

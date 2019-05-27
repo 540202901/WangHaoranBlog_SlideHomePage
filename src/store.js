@@ -7,7 +7,8 @@ var store = new Vuex.Store({
   state:{
     //这里可以当成组件中的data  this.$store.state.变量名
     count:0,//自定义的变量
-    goPageFlag:false,//点击音效
+    goPageMusicFlag:false,
+    loadingOver:false,
   },
   mutations:{
     //这里可以当成组建中的methods  this.$store.commit('方法名',自定义参数)
@@ -16,8 +17,12 @@ var store = new Vuex.Store({
     //       state.变量名++
     //     }
     setGoPageFlag(state,val){
-      state.goPageFlag = val
+      state.goPageMusicFlag = val
     },
+    loadIsOver(state){
+      state.loadingOver = true
+      console.log( state.loadingOver)
+    }
 
   },
   getters:{

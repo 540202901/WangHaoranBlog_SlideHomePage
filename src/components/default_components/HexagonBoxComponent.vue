@@ -34,32 +34,34 @@
     name: "HexagonBoxComponent",
     data:function(){
       return {
-        hexagonOpacity:.55,//六边形显示出来的百分比
-        hexagonSizeNum:0,
-        initFlag : false,//是否初始化完毕 完毕就修改一下过渡动画时间样式
+        hexagonSizeNum:0,//中间盒子大小记录值
       }
     },
     computed:{
       hexagonCenterSize(){ return this.hexagonSizeNum },//中间盒子大小
-      hexagonMediumSize(){ return this.hexagonCenterSize/2 }//周围中等盒子大小
+      hexagonMediumSize(){ return this.hexagonCenterSize/2 },//周围中等盒子大小
+      loadingOver() { return this.$store.state.loadingOver },//页面是否加载完成，加载完成那么就开始显示页面动画
+      hexagonSize() { return this.showHexagonInit.hexagonSize },//设置最大的盒子尺寸
+      sizeChangeObj() { return this.showHexagonInit.sizeChangeObj },//屏幕改变后尺寸显示比例对象
+
+      hexagonOpacity() { return this.showHexagonInit.hexagonOpacity },//六边形显示出来的百分比
+      hexagonShowTime() { return this.showHexagonInit.hexagonShowTime },//显示中间六边形的时间
+      MHSTime() { return this.showHexagonInit.MHSTime },//显示中等六边形的时间
+      MHSIntervalTime() { return this.showHexagonInit.MHSIntervalTime },//显示中等六边形间隔
+      initFlag() { return this.showHexagonInit.initFlag },//是否初始化完毕 完毕就修改一下过渡动画时间样式
+      initTime() { return this.showHexagonInit.initTime },//初始化所需时间
     },
     components:{hexagon},
-    props:['hexagonCenter','hexagonList','hexagonSize','sizeChangeObj'],
-    mounted(){
-      this.hexagonShow()//显示所有六边形
-      window.onresize = ()=>{this.setBigSize()}//监听屏幕宽度改变事件来调整盒子大小
-      this.setBigSize()//初始化盒子大小
-    },
+    props:['hexagonCenter','hexagonList','showHexagonInit'],
     methods:{
       hexagonShow(){
         setTimeout(()=>{
           this.centerHexagonShow()//显示中间六边形
-
-        },3000 )
+        },this.hexagonShowTime )
         setTimeout(()=>{
-          this.mediumHexagonShow()
-        },1300 )//显示中等六边形
-        setTimeout(()=>{this.initFlag = true},3500)//重新设置过渡动画时间
+          this.mediumHexagonShow()//开始显示中等
+        },this.MHSTime )//显示中等六边形
+        setTimeout(()=>{this.initFlag = true},this.initTime)//重新设置过渡动画时间
       },//显示六边形组合的方法
       centerHexagonShow(){
         this.$refs.hexagonCenter.$el.style.opacity = this.hexagonOpacity//显示中间六边形
@@ -69,7 +71,7 @@
         for(let key in this.$refs){
           let hexagon = this.$refs[key][0]
           if(key.includes('mediumHexagon')){//如果是小六边形
-            sleepTime += 200
+            sleepTime += this.MHSIntervalTime//显示时间间隔
             setTimeout(()=>{
               hexagon.$el.style.opacity = this.hexagonOpacity;
             },sleepTime)
@@ -93,6 +95,16 @@
 
       },//设置大盒子大小
 
+    },
+
+    watch:{
+      'loadingOver':function (newVal) {
+        if (newVal) {
+          this.hexagonShow()//显示所有六边形
+          window.onresize = ()=>{this.setBigSize()}//监听屏幕宽度改变事件来调整盒子大小
+          this.setBigSize()//初始化盒子大小
+        }
+      }//如果页面加载完成，那么开始显示六边形盒子组
     },
 
   }

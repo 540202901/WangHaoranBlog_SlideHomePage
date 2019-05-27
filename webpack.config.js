@@ -37,8 +37,8 @@ module.exports = {
     }
   },
   //============缩小项目大小部分
-  mode:'development',//开发模式
-  // mode:'production',//生产模式
+  // mode:'development',//开发模式
+  mode:'production',//生产模式
   externals:{
     "vue":"Vue",
     "vuex":"Vuex",

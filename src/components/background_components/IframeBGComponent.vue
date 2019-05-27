@@ -1,18 +1,22 @@
 <template>
-  <div class="earth-container">
-    <iframe :src="src"></iframe>
+  <div class="iframe-container">
+    <iframe :src="src" ></iframe>
   </div>
 </template>
 
 <script>
   export default {
     name: "EarthComponent",
+
     props:['src'],
   }
 </script>
 
 <style lang="scss" scoped>
-  .earth-container{
+  .iframe-container{
+
+
+
     padding: 0;
     margin: 0;
     width: 100%;
